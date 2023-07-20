@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package profile;
+
+option go_package = "./pkg/pb";
+
+service ProfileManagement{
+    rpc ViewProfile(ViewProfileRequest) returns (ViewProfileResponse) {}
+    rpc EditProfile(EditProfileRequest) returns (EditProfileResponse) {}
+    rpc ChangePassword(ChangeRequest) returns (ChangeResponse) {}
+    rpc AddAddress(AddAddressRequest) returns (AddAddressResponse) {}
+    rpc ViewAddress(ViewAddressRequest) returns (ViewAddressResponse) {}
+    rpc ViewAddressById(ViewAddressByIdRequest) returns (ViewAddressByIdResponse) {}
+    rpc EditAddress(EditAddressRequest) returns (EditAddressResponse) {}
+}
+
+message ViewAddressByIdRequest{
+    int64 addid = 1;
+    int64 uid = 2;
+
+}
+
+message ViewAddressByIdResponse{
+    int64 addressid = 1;
+    string type = 2;
+    string locationaddress = 3;
+    string completeaddress = 4;
+    string landmark = 5;
+    string floorno = 6;
+    int64 status = 7;
+    string error = 8;
+}
+
+message ViewProfileRequest{
+    int64 id = 1;
+}
+
+message ViewProfileResponse{
+    int64 status = 1;
+    string username = 2;
+    string email = 3;
+    string phone = 4;
+    string profile = 5 ;  
+    string error = 6;
+    string gender = 7;
+    string dob = 8;
+}
+message EditProfileRequest{
+    int64 id = 1 ;
+    string username = 2;
+    string gender = 3;
+    string dob = 4;
+}
+
+message EditProfileResponse{
+    int64 status = 1;
+    string error = 2;
+}
+
+message ChangeRequest{
+    int64 id = 1;
+    string oldpassword = 2;
+    string newpassword = 3;
+}
+
+message ChangeResponse{
+    int64 status = 1;
+    string error = 2;
+}
+
+message AddAddressRequest{
+    int64 id = 1;
+    string type = 2;
+    string locationaddress = 3;
+    string completeaddress = 4;
+    string landmark = 5;
+    string floorno = 6;
+}
+
+message AddAddressResponse{
+    int64 status = 1;
+    string error = 2;
+    int64 addid = 3;
+}
+
+message ViewAddressRequest{
+    int64 id = 1;
+}
+
+message ViewAddressResponse {
+    repeated Address addresses = 1;
+    int64 status = 2;
+    string error = 3;
+}
+  
+message Address {
+    int64 addressid = 1;
+    string type = 2;
+    string locationaddress = 3;
+    string completeaddress = 4;
+    string landmark = 5;
+    string floorno = 6;
+}
+
+message EditAddressRequest{
+    int64 id = 1;
+    int64 addressid = 2;
+    string type = 3;
+    string locationaddress = 4;
+    string completeaddress = 5;
+    string landmark = 6;
+    string floorno = 7;
+}
+
+message EditAddressResponse{
+    int64 status = 1;
+    string error = 2;
+    int64 addid = 3;
+}
+  
+
+
+// export PATH="$PATH:$(go env GOPATH)/bin"
+// protoc --go_out=. --go-grpc_out=. pkg/pb/user.proto
