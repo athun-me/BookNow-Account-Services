@@ -12,6 +12,14 @@ service ProfileManagement{
     rpc ViewAddress(ViewAddressRequest) returns (ViewAddressResponse) {}
     rpc ViewAddressById(ViewAddressByIdRequest) returns (ViewAddressByIdResponse) {}
     rpc EditAddress(EditAddressRequest) returns (EditAddressResponse) {}
+    rpc GetUserData(UserDataRequest)returns(UserDataResponse){}
+}
+//To get User data 
+message UserDataRequest{
+    int64 userid = 1;
+}
+message UserDataResponse{
+    string username = 1;
 }
 
 message ViewAddressByIdRequest{

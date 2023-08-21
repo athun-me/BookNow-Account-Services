@@ -20,6 +20,22 @@ func NewUserHandler(usecase interfaces.UserUseCase) *UserHandler {
 	}
 }
 
+func (h *UserHandler) GetUserData(ctx context.Context, req *pb.UserDataRequest) (*pb.UserDataResponse, error) {
+	user := domain.User{
+		Id: uint(req.Userid),
+	}
+	user, err := h.useCase.ViewProfile(user)
+	if err != nil {
+		return &pb.UserDataResponse{
+			Username: "",
+		}, err
+	}
+	return &pb.UserDataResponse{
+		Username: user.Username,
+	}, nil
+
+}
+
 func (h *UserHandler) ViewProfile(ctx context.Context, req *pb.ViewProfileRequest) (*pb.ViewProfileResponse, error) {
 	user := domain.User{
 		Id: uint(req.Id),

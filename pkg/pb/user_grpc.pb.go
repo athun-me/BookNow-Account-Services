@@ -25,6 +25,7 @@ type ProfileManagementClient interface {
 	ViewAddress(ctx context.Context, in *ViewAddressRequest, opts ...grpc.CallOption) (*ViewAddressResponse, error)
 	ViewAddressById(ctx context.Context, in *ViewAddressByIdRequest, opts ...grpc.CallOption) (*ViewAddressByIdResponse, error)
 	EditAddress(ctx context.Context, in *EditAddressRequest, opts ...grpc.CallOption) (*EditAddressResponse, error)
+	GetUserData(ctx context.Context, in *UserDataRequest, opts ...grpc.CallOption) (*UserDataResponse, error)
 }
 
 type profileManagementClient struct {
@@ -98,6 +99,15 @@ func (c *profileManagementClient) EditAddress(ctx context.Context, in *EditAddre
 	return out, nil
 }
 
+func (c *profileManagementClient) GetUserData(ctx context.Context, in *UserDataRequest, opts ...grpc.CallOption) (*UserDataResponse, error) {
+	out := new(UserDataResponse)
+	err := c.cc.Invoke(ctx, "/profile.ProfileManagement/GetUserData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProfileManagementServer is the server API for ProfileManagement service.
 // All implementations must embed UnimplementedProfileManagementServer
 // for forward compatibility
@@ -109,6 +119,7 @@ type ProfileManagementServer interface {
 	ViewAddress(context.Context, *ViewAddressRequest) (*ViewAddressResponse, error)
 	ViewAddressById(context.Context, *ViewAddressByIdRequest) (*ViewAddressByIdResponse, error)
 	EditAddress(context.Context, *EditAddressRequest) (*EditAddressResponse, error)
+	GetUserData(context.Context, *UserDataRequest) (*UserDataResponse, error)
 	mustEmbedUnimplementedProfileManagementServer()
 }
 
@@ -136,6 +147,9 @@ func (UnimplementedProfileManagementServer) ViewAddressById(context.Context, *Vi
 }
 func (UnimplementedProfileManagementServer) EditAddress(context.Context, *EditAddressRequest) (*EditAddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EditAddress not implemented")
+}
+func (UnimplementedProfileManagementServer) GetUserData(context.Context, *UserDataRequest) (*UserDataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserData not implemented")
 }
 func (UnimplementedProfileManagementServer) mustEmbedUnimplementedProfileManagementServer() {}
 
@@ -276,6 +290,24 @@ func _ProfileManagement_EditAddress_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProfileManagement_GetUserData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProfileManagementServer).GetUserData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/profile.ProfileManagement/GetUserData",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProfileManagementServer).GetUserData(ctx, req.(*UserDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProfileManagement_ServiceDesc is the grpc.ServiceDesc for ProfileManagement service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -310,6 +342,10 @@ var ProfileManagement_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EditAddress",
 			Handler:    _ProfileManagement_EditAddress_Handler,
+		},
+		{
+			MethodName: "GetUserData",
+			Handler:    _ProfileManagement_GetUserData_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
